@@ -45,9 +45,9 @@ func Test_defaultDict_IsChs(t *testing.T) {
 		{"cht", args{s: "他中午會到", threshold: 0.9}, false},
 		{"chs", args{s: "太好了", threshold: 0.8}, true},
 	}
+	d := DefaultDict()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := DefaultDict()
 			if got := d.IsChs(tt.args.s, tt.args.threshold); got != tt.want {
 				t.Errorf("IsChs() = %v, want %v", got, tt.want)
 			}
