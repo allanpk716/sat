@@ -16,6 +16,8 @@ func TestConvertPlain(t *testing.T) {
 	}
 
 	for sc, expected := range cases {
+		readOne := dicter.Read(sc)
+		println(readOne)
 		actually := dicter.ReadReverse(sc)
 		if expected != actually {
 			t.Errorf("\nexpected: %s\nactually: %s", expected, actually)

@@ -28,3 +28,29 @@ func BenchmarkDefaultDict_ReadReverse(b *testing.B) {
 		_ = dicter.ReadReverse("什么")
 	}
 }
+
+func Test_defaultDict_IsChs(t *testing.T) {
+
+	type args struct {
+		s         string
+		threshold float32
+	}
+	tests := []struct {
+		name   string
+		args   args
+		want   bool
+	}{
+		{"cht", args{s: "我會再確認時間地點", threshold: 0.9}, false},
+		{"cht", args{s: "我再打給你", threshold: 0.9}, false},
+		{"cht", args{s: "他中午會到", threshold: 0.9}, false},
+		{"chs", args{s: "太好了", threshold: 0.8}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := DefaultDict()
+			if got := d.IsChs(tt.args.s, tt.args.threshold); got != tt.want {
+				t.Errorf("IsChs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

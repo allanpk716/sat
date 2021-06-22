@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strings"
 	"sync"
 )
 
@@ -63,12 +64,34 @@ func read(s string, f func(char rune) rune) string {
 	return string(r)
 }
 
+func (d *defaultDict) isChs(char rune) bool {
+	d.mt.RLock()
+	defer d.mt.RUnlock()
+	_, ok := d.data[char]
+	return !ok
+}
+
 func (d *defaultDict) Read(s string) string {
 	return read(s, d.getData)
 }
 
 func (d *defaultDict) ReadReverse(s string) string {
 	return read(s, d.getDataR)
+}
+
+func (d *defaultDict) IsChs(s string, threshold float32) bool {
+	r := []rune(strings.TrimSpace(s))
+	chsCount := 0
+	for i := 0; i < len(r); i++ {
+		if d.isChs(r[i]) == true {
+			chsCount++
+		}
+	}
+	if float32(chsCount) / float32(len(r)) > threshold {
+		return true
+	} else {
+		return false
+	}
 }
 
 var d *defaultDict
